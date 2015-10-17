@@ -1,0 +1,20 @@
+#!/bin/bash
+source .env
+id="rev${RANDOM}"
+ec2-create-keypair ${id} > ${id}.pem
+chmod 0600 ${id}.pem
+ec2-create-group ${id} -d "${id}"
+ec2-authorize ${id} -p 22 -s $(curl http://checkip.amazonaws.com)/32
+
+instance_id=$(ec2-run-instances ami-d05e75b8 -t t2.small -k ${id} -g ${id} |
+  grep INSTANCE | awk '{print $2}')
+
+while [ "$(ec2-describe-instance-status ${instance_id} | awk '{print $4}')" != "running" ]
+do
+  echo -n "."
+done
+
+public_dns=$(ec2-describe-instances | grep ${instance_id} | awk '{print $4}')
+
+ssh -oStrictHostKeyChecking=no -i ${id}.pem ubuntu@${public_dns}
+
