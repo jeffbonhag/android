@@ -1,5 +1,8 @@
 #!/bin/bash
 set -e -x
+exec > >(tee /var/log/user-data.log|logger -t user-data ) 2>&1
+echo BEGIN
+date '+%Y-%m-%d %H:%M:%S'
 apt-get update
 apt-get -y install openjdk-6-jdk
 apt-get -y install bison g++-multilib git gperf libxml2-utils make \
@@ -10,6 +13,11 @@ PATH=/usr/local/bin:$PATH
 curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin/repo
 chmod a+x /usr/local/bin/repo
 
+function config() {
+  git config --global user.name "Jeff Bonhag"
+  git config --global user.email "jeff@thebonhags.com"
+}
+
 function init() {
   mkdir WORKING_DIRECTORY
   cd WORKING_DIRECTORY
@@ -19,11 +27,6 @@ function init() {
 
 function sync() {
   repo sync
-}
-
-function config() {
-  git config --global user.name "Jeff Bonhag"
-  git config --global user.email "jeff@thebonhags.com"
 }
 
 function build() {
