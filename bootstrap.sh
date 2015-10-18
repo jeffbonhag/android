@@ -27,6 +27,8 @@ function init() {
 
 function sync() {
   repo sync
+  # annoying false-positive java version thing
+  ed -s build/core/main.mk <<< $'g/$(error stop)/d\nw'
 }
 
 function build() {
