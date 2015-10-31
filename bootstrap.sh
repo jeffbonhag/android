@@ -16,6 +16,7 @@ chmod a+x /usr/local/bin/repo
 function config() {
   git config --global user.name "Jeff Bonhag"
   git config --global user.email "jeff@thebonhags.com"
+  git config --global color.ui true
 }
 
 function init() {
