@@ -8,7 +8,7 @@ apt-get -y install openjdk-6-jdk
 apt-get -y install bison g++-multilib git gperf libxml2-utils make \
 python-networkx zip lib32z1 xsltproc flex libswitch-perl
 
-mkdir /usr/local/bin
+mkdir -p /usr/local/bin
 PATH=/usr/local/bin:$PATH
 curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin/repo
 chmod a+x /usr/local/bin/repo
@@ -34,5 +34,20 @@ function sync() {
 function build() {
   source build/envsetup.sh
   lunch full-eng
+  make
+}
+
+function kernel() {
+  git clone https://github.com/jeffbonhag/mystul.git
+  cd mystul/
+  tar xvf mystul-3.4.10-c3a41c4.tar.gz 
+  cd mystul-3.4.10-c3a41c4/
+  git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6
+  export TOP=$PWD
+  export PATH=$TOP/arm-eabi-4.6/bin:$PATH
+  export ARCH=arm
+  export SUBARCH=arm
+  export CROSS_COMPILE=arm-eabi-
+  make operaul_defconfig
   make
 }
