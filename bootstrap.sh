@@ -52,3 +52,27 @@ function kernel() {
   make operaul_defconfig
   make
 }
+
+function cyanogen() {
+  sudo apt-get -y install schedtool lzop
+
+  # initialize build environment
+  mkdir work
+  cd work
+  config
+  repo init -u https://github.com/CyanogenMod/android.git -b cm-11.0
+  mkdir -p .repo/local_manifests
+  wget https://github.com/CMyst/android/raw/cm-11.0/local_manifest.xml -O .repo/local_manifests/local_manifest.xml
+
+  # sync
+  repo sync
+
+  # get prebuilts
+  cd vendor/cm
+  ./get-prebuilts 
+  cd ../..
+
+  # build
+  . build/envsetup.sh && lunch cm_mystul-userdebug
+  mka
+}
