@@ -1,12 +1,12 @@
 #!/bin/bash
 source .env
-id="rev${RANDOM}"
+id=$(perl -MList::Util=shuffle -e 'print shuffle(<STDIN>);' < /usr/share/dict/words | sed '4q' | tr '\n' '-')
 ec2-create-keypair ${id} > ${id}.pem
 chmod 0600 ${id}.pem
 ec2-create-group ${id} -d "${id}"
 ec2-authorize ${id} -p 22 -s $(curl http://checkip.amazonaws.com)/32
 
-instance_id=$(ec2-run-instances ami-d05e75b8 -t t2.medium -k ${id} -g ${id} -b "/dev/sda1=:80" --user-data-file bootstrap.sh | grep INSTANCE | awk '{print $2}')
+instance_id=$(ec2-run-instances ami-d05e75b8 -t t2.large -k ${id} -g ${id} -b "/dev/sda1=:80" --user-data-file bootstrap.sh | grep INSTANCE | awk '{print $2}')
 
 while [ "$(ec2-describe-instance-status ${instance_id} | awk '{print $4}')" != "running" ]
 do
