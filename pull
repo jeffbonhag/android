@@ -1,4 +1,4 @@
 #!/bin/bash
-rsync -azvm -e "ssh -i rev22698.pem" \
-  --include='*.img' --include='*/' --exclude='*' \
-  ubuntu@ec2-52-91-213-222.compute-1.amazonaws.com:WORKING_DIRECTORY/out .
+CERTIFICATE_FILE=$1
+HOST=$2
+scp -i $1 "ubuntu@$2:build/out/target/product/mystul/*.zip" .
