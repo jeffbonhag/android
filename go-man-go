@@ -15,5 +15,5 @@ done
 
 public_dns=$(ec2-describe-instances | grep ${instance_id} | awk '{print $4}')
 
+echo ssh -oStrictHostKeyChecking=no -i ${id}.pem ubuntu@${public_dns}
 ssh -oStrictHostKeyChecking=no -i ${id}.pem ubuntu@${public_dns}
-

@@ -4,6 +4,7 @@ exec > >(tee /var/log/user-data.log|logger -t user-data ) 2>&1
 echo BEGIN
 date '+%Y-%m-%d %H:%M:%S'
 apt-get update
+#apt-get upgrade
 apt-get -y install openjdk-6-jdk
 apt-get -y install bison g++-multilib git gperf libxml2-utils make \
 python-networkx zip lib32z1 xsltproc flex libswitch-perl
@@ -14,8 +15,8 @@ curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin/rep
 chmod a+x /usr/local/bin/repo
 
 function config() {
-  git config --global user.name "Jeff Bonhag"
-  git config --global user.email "jeff@thebonhags.com"
+  git config --global user.name "Nobody"
+  git config --global user.email "nobody@nowhere.net"
   git config --global color.ui true
 }
 
@@ -57,8 +58,8 @@ function cyanogen() {
   sudo apt-get -y install schedtool lzop
 
   # initialize build environment
-  mkdir work
-  cd work
+  mkdir build
+  cd build
   config
   repo init -u https://github.com/CyanogenMod/android.git -b cm-11.0
   mkdir -p .repo/local_manifests
@@ -74,5 +75,5 @@ function cyanogen() {
 
   # build
   . build/envsetup.sh && lunch cm_mystul-userdebug
-  mka
+  mka bacon
 }
